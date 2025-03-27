@@ -1,0 +1,69 @@
+select nome_pais,count(nome_atleta) as 'Nª De países'
+from paises a
+inner join atletas b on b.id_pais = a.id_pais
+group by nome_pais;
+
+'Total de Medalhas por País - Exiba todos os atletas que ganharam medalhas de ouro, juntamente
+com o país, modalidade e a competição na qual eles competiram. [Difícil]';
+
+	select *
+	from resultado;
+
+select nome_atleta,nome_pais,nome_modalidade,posicao_final,
+case
+	when posicao_final = 1 then 'Ouro'
+    else 'Outra posicao'
+end as 'Medalha'
+from paises p
+inner join atletas a on a.id_pais = p.id_pais
+inner join participacao part on part.id_atleta = a.id_atleta
+inner join resultado r on r.id_participacao = part.id_participacao
+inner join modalidades m on m.id_modalidade = part.id_modalidade	
+inner join competicao c on c.id_modalidade = m.id_modalidade
+where posicao_final = 1;
+
+'Participação por País - Exibe o número total de participações de atletas por país em todas as
+competições. [Fácil]';
+
+select nome_pais,nome_modalidade,count(*) as 'Total'
+from paises p
+inner join atletas a on a.id_pais = p.id_pais
+inner join participacao part on part.id_atleta = a.id_atleta
+inner join modalidades m on m.id_modalidade = part.id_modalidade
+inner join competicao c on c.id_modalidade = m.id_modalidade	
+group by nome_pais,nome_modalidade
+order by nome_modalidade asc;
+
+select nome_modalidade,nome_pais
+from paises p
+inner join atletas a on a.id_pais = p.id_pais
+inner join participacao part on part.id_atleta = a.id_atleta
+inner join modalidades m on m.id_modalidade = part.id_modalidade
+inner join competicao c on c.id_modalidade = m.id_modalidade	
+order by nome_modalidade asc;
+
+select nome_pais,nome_modalidade,case
+	when count(*) >= 2 then count(*)
+    else null
+end as 'NÚMERO MAIOR QUE 2'
+from paises p
+inner join atletas a on a.id_pais = p.id_pais
+inner join participacao part on part.id_atleta = a.id_atleta
+inner join modalidades m on m.id_modalidade = part.id_modalidade
+inner join competicao c on c.id_modalidade = m.id_modalidade	
+group by nome_pais,nome_modalidade having(count(*)>=2)
+order by nome_modalidade asc;
+
+'Resultados por Modalidade - Apresente a lista de todos os atletas que participaram de uma
+modalidade específica, juntamente com a medalha (se houver) e a competição em que
+participaram.';
+SELECT nome_modalidade
+FROM modalidades;
+
+SELECT nome_modalidade,nome
+FROM paises p
+INNER JOIN atletas a ON a.id_pais = p.id_pais
+INNER JOIN participacao part ON part.id_atleta = a.id_atleta
+INNER JOIN modalidades m ON m.id_modalidade = part.id_modalidade
+INNER JOIN competicao c ON c.id_modalidade = m.id_modalidade
+WHERE nome_modalidade LIKE 'A%';
